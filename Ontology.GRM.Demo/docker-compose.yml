@@ -1,0 +1,21 @@
+services:
+  neo4j:
+    image: neo4j:latest
+    container_name: ontology_grm_neo4j
+    ports:
+      - '7474:7474'
+      - '7687:7687'
+      - '7473:7473'
+    environment:
+      NEO4J_AUTH: 'neo4j/password'
+    volumes:
+      - ./neo4j_data:/data
+      - ./neo4j_logs:/logs
+      - ./neo4j_import:/import
+      - ./neo4j_plugins:/plugins
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7474/" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s

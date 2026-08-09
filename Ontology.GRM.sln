@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ontology.GRM", "Ontology.GRM\Ontology.GRM.csproj", "{3118DCAD-80E6-42D7-86C5-59449F39DF64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ontology.GRM.Demo", "Ontology.GRM.Demo\Ontology.GRM.Demo.csproj", "{65AE1080-219C-40C6-9F3B-8EE200543207}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ontology.GRM.Neo4j", "Ontology.GRM.Neo4j\Ontology.GRM.Neo4j.csproj", "{FB75BE52-4FC6-46AC-A0D3-580E72B74593}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ontology.GRM.Neo4j.Tests", "Ontology.GRM.Neo4j.Tests\Ontology.GRM.Neo4j.Tests.csproj", "{2DB7EC52-C2A2-40AB-A676-2779C55AEB15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ontology.GRM.Tests", "Ontology.GRM.Tests\Ontology.GRM.Tests.csproj", "{14B34C78-BD0B-4A21-BFEE-8EC27C7FEE5A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3118DCAD-80E6-42D7-86C5-59449F39DF64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3118DCAD-80E6-42D7-86C5-59449F39DF64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3118DCAD-80E6-42D7-86C5-59449F39DF64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3118DCAD-80E6-42D7-86C5-59449F39DF64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65AE1080-219C-40C6-9F3B-8EE200543207}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65AE1080-219C-40C6-9F3B-8EE200543207}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65AE1080-219C-40C6-9F3B-8EE200543207}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65AE1080-219C-40C6-9F3B-8EE200543207}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB75BE52-4FC6-46AC-A0D3-580E72B74593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB75BE52-4FC6-46AC-A0D3-580E72B74593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB75BE52-4FC6-46AC-A0D3-580E72B74593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB75BE52-4FC6-46AC-A0D3-580E72B74593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DB7EC52-C2A2-40AB-A676-2779C55AEB15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DB7EC52-C2A2-40AB-A676-2779C55AEB15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DB7EC52-C2A2-40AB-A676-2779C55AEB15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DB7EC52-C2A2-40AB-A676-2779C55AEB15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14B34C78-BD0B-4A21-BFEE-8EC27C7FEE5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14B34C78-BD0B-4A21-BFEE-8EC27C7FEE5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14B34C78-BD0B-4A21-BFEE-8EC27C7FEE5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14B34C78-BD0B-4A21-BFEE-8EC27C7FEE5A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

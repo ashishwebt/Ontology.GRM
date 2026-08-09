@@ -1,0 +1,25 @@
+# Build results
+bin/
+obj/
+*.dll
+*.exe
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.sln.docstates
+
+# NuGet
+.nuget/
+packages/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+neo4j*
