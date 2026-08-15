@@ -16,7 +16,7 @@ public static class Program
 
         context.People.Add(alice);
         context.People.Add(bob);
-        context.Friendships.Add(new Friendship(alice.Id, bob.Id) { Id = Guid.NewGuid(), Since = DateTime.UtcNow });
+        context.Friendships.Add(new Friendship(alice, bob) { Id = Guid.NewGuid(), Since = DateTime.UtcNow });
 
         context.SaveChanges();
 
@@ -53,8 +53,8 @@ public sealed class SocialGraphContext : GraphContext
                 .HasProperty(person => person.Name);
 
             builder.DefineEdge<Friendship>()
-                .From<Person>(p1 => p1.FromId)
-                .To<Person>(p2 => p2.ToId);
+                .From<Person>(f => f.From)
+                .To<Person>(f => f.To);
         });
     }
 }
@@ -69,13 +69,18 @@ public sealed class Friendship
 {
     public Friendship(Guid fromId, Guid toId)
     {
-        FromId = fromId;
-        ToId = toId;
-
+        From = null!; // keep parameterless behavior for compiled callers; constructor below used by demo
+        To = null!;
     }
+    public Friendship(Person from, Person to)
+    {
+        From = from ?? throw new ArgumentNullException(nameof(from));
+        To = to ?? throw new ArgumentNullException(nameof(to));
+    }
+
     public Guid Id { get; init; }
-    public Guid FromId { get; init; }
-    public Guid ToId { get; init; }
+    public Person From { get; init; }
+    public Person To { get; init; }
     public DateTime Since { get; set; }
 
 }

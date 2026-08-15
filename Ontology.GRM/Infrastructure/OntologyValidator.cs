@@ -30,9 +30,9 @@ public sealed class OntologyValidator
             EnsureNodeExists(ontology, edge.FromType, edge.ClrType, "source");
             EnsureNodeExists(ontology, edge.ToType, edge.ClrType, "target");
             if (edge.FromKey is null)
-                throw new InvalidOperationException($"Invalid ontology: edge '{edge.ClrType.Name}' has no source key. Configure From<TNode>(...) or add a public FromId property.");
+                throw new InvalidOperationException($"Invalid ontology: edge '{edge.ClrType.Name}' has no source key. Configure From<TNode>(...).");
             if (edge.ToKey is null)
-                throw new InvalidOperationException($"Invalid ontology: edge '{edge.ClrType.Name}' has no target key. Configure To<TNode>(...) or add a public ToId property.");
+                throw new InvalidOperationException($"Invalid ontology: edge '{edge.ClrType.Name}' has no target key. Configure To<TNode>(...).");
             ValidateOptionalProperty(edge.ClrType, edge.FromKey?.Name, "source key");
             ValidateOptionalProperty(edge.ClrType, edge.ToKey?.Name, "target key");
             ValidateEndpointKeyType(ontology, edge, edge.FromType, edge.FromKey!, "source");
@@ -70,12 +70,16 @@ public sealed class OntologyValidator
         string endpointName)
     {
         var nodeKey = ontology.GetNode(endpointType).Key!;
-        if (endpointKey.Property.PropertyType != nodeKey.Property.PropertyType)
+        var endpointPropType = endpointKey.Property.PropertyType;
+        var nodeKeyType = nodeKey.Property.PropertyType;
+
+        // Accept either the raw node key type (e.g. Guid) or a navigation property of the node CLR type.
+        if (endpointPropType != nodeKeyType && endpointPropType != endpointType && !endpointPropType.IsAssignableTo(endpointType))
         {
             throw new InvalidOperationException(
                 $"Invalid ontology: {endpointName} key '{endpointKey.Name}' on edge '{edge.ClrType.Name}' has type " +
                 $"'{endpointKey.Property.PropertyType.Name}', but node '{endpointType.Name}' uses key " +
-                $"'{nodeKey.Name}' of type '{nodeKey.Property.PropertyType.Name}'.");
+                $"'{nodeKey.Name}' of type '{nodeKey.Property.PropertyType.Name}'. Endpoint key must be either the node key type or the node CLR type for navigation.");
         }
     }
 

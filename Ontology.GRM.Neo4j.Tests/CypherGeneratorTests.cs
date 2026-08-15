@@ -14,7 +14,7 @@ public sealed class CypherGeneratorTests
 
         var batch = new CypherGenerator().Build([new GraphChange(person, GraphChangeState.Added)], model);
 
-        Assert.Equal("MERGE (n:`Person` {`Id`: 'd2719f1f-2dac-4a90-b6a9-1a5c69aae2ad'}) SET n.`Name` = 'Alice'", batch);
+        Assert.Equal("UNWIND [{temp: 't1', props: {`Id`: 'd2719f1f-2dac-4a90-b6a9-1a5c69aae2ad', `Name`: 'Alice'}}] AS row CREATE (n:`Person`) SET n += row.props SET n.`__session_temp_id` = row.temp", batch);
     }
 
     [Fact]

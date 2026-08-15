@@ -57,8 +57,8 @@ internal sealed class EdgeMappingBuilder(Type clrType, string relationshipType)
         RelationshipType,
         FromType,
         ToType,
-        FromKey ?? ClrType.GetProperty("FromId"),
-        ToKey ?? ClrType.GetProperty("ToId"),
+        FromKey,
+        ToKey,
         Key,
         Properties);
 }
