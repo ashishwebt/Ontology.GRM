@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Linq;
 using Ontology.GRM.Ontology;
 
 namespace Ontology.GRM.Providers;
@@ -94,11 +95,38 @@ internal sealed class CypherQueryTranslator
 
     private string Property(string variable, MemberExpression member, ParameterExpression parameter)
     {
-        if (member.Expression != parameter)
-            throw new NotSupportedException("Only direct mapped property access is supported.");
-        if (!_mappedProperties.Contains(member.Member.Name))
-            throw new InvalidOperationException($"Property '{member.Member.Name}' is not mapped for graph type '{_rootType.Name}'.");
-        return $"{variable}.`{Escape(member.Member.Name)}`";
+        // Direct property on the root parameter: n.Property or r.Property
+        if (member.Expression == parameter)
+        {
+            if (!_mappedProperties.Contains(member.Member.Name))
+                throw new InvalidOperationException($"Property '{member.Member.Name}' is not mapped for graph type '{_rootType.Name}'.");
+            return $"{variable}.`{Escape(member.Member.Name)}`";
+        }
+
+        // Support nested access for edges: e => e.From.KeyProperty (translate to from.`KeyProperty`)
+        if (_isEdge && member.Expression is MemberExpression inner && inner.Expression == parameter)
+        {
+            var edgeMapping = _ontology.GetEdge(_rootType);
+            // Determine if inner.Member is FromKey or ToKey on the edge mapping
+            var isFrom = edgeMapping.FromKey is not null && string.Equals(edgeMapping.FromKey.Name, inner.Member.Name, StringComparison.Ordinal);
+            var isTo = edgeMapping.ToKey is not null && string.Equals(edgeMapping.ToKey.Name, inner.Member.Name, StringComparison.Ordinal);
+            if (!isFrom && !isTo)
+                throw new InvalidOperationException("Only navigation properties configured with From/To may be used for nested property access.");
+
+            // member.Member is the property on the node type
+            var nodeType = isFrom ? edgeMapping.FromType! : edgeMapping.ToType!;
+            var nodeMapping = _ontology.GetNode(nodeType);
+            if (nodeMapping.Key is null)
+                throw new InvalidOperationException($"Node '{nodeType.Name}' has no configured key to project.");
+
+            if (!_mappedProperties.Contains(member.Member.Name) && !nodeMapping.Properties.Any(p => p.Name == member.Member.Name) && nodeMapping.Key?.Name != member.Member.Name)
+                throw new InvalidOperationException($"Property '{member.Member.Name}' is not mapped for node type '{nodeType.Name}'.");
+
+            var endpointVar = isFrom ? "from" : "to";
+            return $"{endpointVar}.`{Escape(member.Member.Name)}`";
+        }
+
+        throw new NotSupportedException("Only direct mapped property access is supported.");
     }
 
     private static IEnumerable<PropertyMapping> NodeProperties(NodeMapping mapping)

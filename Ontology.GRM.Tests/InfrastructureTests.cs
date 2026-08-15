@@ -51,7 +51,7 @@ public sealed class InfrastructureTests
             builder.DefineEdge<EdgeWithoutEndpoints>().From<Person>().To<Person>();
         }));
 
-        Assert.Equal("Invalid ontology: edge 'EdgeWithoutEndpoints' has no source key. Configure From<TNode>(...) or add a public FromId property.", exception.Message);
+        Assert.Equal("Invalid ontology: edge 'EdgeWithoutEndpoints' has no source key. Configure From<TNode>(...).", exception.Message);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public sealed class InfrastructureTests
                 .To<Person>(edge => edge.ToId);
         }));
 
-        Assert.Equal("Invalid ontology: source key 'FromId' on edge 'InvalidFriendship' has type 'String', but node 'Person' uses key 'Id' of type 'Guid'.", exception.Message);
+        Assert.Equal("Invalid ontology: source key 'FromId' on edge 'InvalidFriendship' has type 'String', but node 'Person' uses key 'Id' of type 'Guid'. Endpoint key must be either the node key type or the node CLR type for navigation.", exception.Message);
     }
 
     [Fact]

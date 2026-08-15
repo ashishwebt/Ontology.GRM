@@ -71,6 +71,31 @@ public sealed class OntologyBuilder
                 throw new InvalidOperationException($"Edge '{edge.ClrType.Name}' must configure both From<T>() and To<T>().");
             if (!_nodes.Any(node => node.ClrType == edge.FromType) || !_nodes.Any(node => node.ClrType == edge.ToType))
                 throw new InvalidOperationException($"Edge '{edge.ClrType.Name}' endpoints must be configured node types.");
+            // Validate that the configured From/To properties on the edge either carry the
+            // node key value (e.g., Guid) or a navigation reference to the node type itself.
+            var fromNode = _nodes.First(n => n.ClrType == edge.FromType);
+            var toNode = _nodes.First(n => n.ClrType == edge.ToType);
+
+            var fromKeyProp = edge.FromKey;
+            var toKeyProp = edge.ToKey;
+
+            if (fromKeyProp is null)
+                throw new InvalidOperationException($"Edge '{edge.ClrType.Name}' has no source key configured. Use From<TNode>(...) to map an endpoint property.");
+            if (toKeyProp is null)
+                throw new InvalidOperationException($"Edge '{edge.ClrType.Name}' has no target key configured. Use To<TNode>(...) to map an endpoint property.");
+
+            // Determine allowed types: either the node key type, or the node CLR type (navigation property)
+            var expectedFromKeyType = fromNode.Key is not null ? fromNode.Key.PropertyType : null;
+            var expectedToKeyType = toNode.Key is not null ? toNode.Key.PropertyType : null;
+
+            var fromPropType = fromKeyProp.PropertyType;
+            var toPropType = toKeyProp.PropertyType;
+
+            var fromOk = (expectedFromKeyType is not null && expectedFromKeyType == fromPropType) || fromPropType == fromNode.ClrType || fromPropType.IsAssignableTo(fromNode.ClrType);
+            var toOk = (expectedToKeyType is not null && expectedToKeyType == toPropType) || toPropType == toNode.ClrType || toPropType.IsAssignableTo(toNode.ClrType);
+
+            if (!fromOk || !toOk)
+                throw new InvalidOperationException($"Edge '{edge.ClrType.Name}' endpoint property types must be either the node key type or the node type (navigation property).");
         }
     }
 }

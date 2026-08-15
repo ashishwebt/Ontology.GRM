@@ -9,7 +9,7 @@ public sealed class OntologyBuilderTests
     {
         var builder = new OntologyBuilder();
         builder.DefineNode<Person>("Person").HasKey(person => person.Id).HasProperty(person => person.Name);
-        builder.DefineEdge<Friendship>("FRIENDS_WITH").From<Person>().To<Person>().WithProperty(edge => edge.Since);
+        builder.DefineEdge<Friendship>("FRIENDS_WITH").From<Person>(edge => edge.FromPersonId).To<Person>(edge => edge.ToPersonId).WithProperty(edge => edge.Since);
 
         var model = builder.Build();
         var node = model.GetNode(typeof(Person));
@@ -28,7 +28,7 @@ public sealed class OntologyBuilderTests
     {
         var builder = new OntologyBuilder();
         builder.DefineNode<Person>().HasKey(person => person.Id);
-        builder.DefineEdge<Friendship>().From<Person>().To<OtherPerson>();
+        builder.DefineEdge<Friendship>().From<Person>(edge => edge.FromPersonId).To<OtherPerson>();
 
         var exception = Assert.Throws<InvalidOperationException>(builder.Build);
         Assert.Contains("endpoints", exception.Message);
@@ -50,8 +50,8 @@ public sealed class OntologyBuilderTests
     {
         var builder = new OntologyBuilder();
         builder.DefineNode<Person>().HasKey(person => person.Id);
-        builder.DefineEdge<Friendship>("CONNECTED_TO").From<Person>().To<Person>();
-        builder.DefineEdge<Colleague>("connected_to").From<Person>().To<Person>();
+        builder.DefineEdge<Friendship>("CONNECTED_TO").From<Person>(edge => edge.FromPersonId).To<Person>(edge => edge.ToPersonId);
+        builder.DefineEdge<Colleague>("connected_to").From<Person>(edge => edge.FromPersonId).To<Person>(edge => edge.ToPersonId);
 
         var exception = Assert.Throws<InvalidOperationException>(builder.Build);
 
@@ -82,7 +82,7 @@ public sealed class OntologyBuilderTests
     }
 
     private sealed class Person { public Guid Id { get; set; } public string Name { get; set; } = string.Empty; }
-    private sealed class OtherPerson { }
-    private sealed class Friendship { public DateTime Since { get; set; } }
-    private sealed class Colleague { }
+    private sealed class OtherPerson { public Guid Id { get; set; } }
+    private sealed class Friendship { public Guid FromPersonId { get; set; } public Guid ToPersonId { get; set; } public DateTime Since { get; set; } }
+    private sealed class Colleague { public Guid FromPersonId { get; set; } public Guid ToPersonId { get; set; } }
 }

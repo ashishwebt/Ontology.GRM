@@ -30,9 +30,8 @@ public sealed class OntologyValidationTests
 
         var model = builder.Build();
         var exception = Assert.Throws<InvalidOperationException>(() => new OntologyValidator().Validate(model));
-
         Assert.Equal(
-            "Invalid ontology: edge 'EdgeWithoutSourceId' has no source key. Configure From<TNode>(...) or add a public FromId property.",
+            "Invalid ontology: edge 'EdgeWithoutSourceId' has no source key. Configure From<TNode>(...).",
             exception.Message);
     }
 
@@ -49,7 +48,7 @@ public sealed class OntologyValidationTests
         var exception = Assert.Throws<InvalidOperationException>(() => new OntologyValidator().Validate(model));
 
         Assert.Equal(
-            "Invalid ontology: source key 'FromId' on edge 'InvalidFriendship' has type 'String', but node 'Person' uses key 'Id' of type 'Guid'.",
+            "Invalid ontology: source key 'FromId' on edge 'InvalidFriendship' has type 'String', but node 'Person' uses key 'Id' of type 'Guid'. Endpoint key must be either the node key type or the node CLR type for navigation.",
             exception.Message);
     }
 }
